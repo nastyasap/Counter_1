@@ -1,0 +1,12 @@
+.input {
+    border-radius: 4px;
+    border: 2px solid lightskyblue;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    width: 80px;
+}
+
+.error {
+    background: darkred;
+    color: red;
+}
