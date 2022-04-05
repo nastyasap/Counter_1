@@ -7,7 +7,8 @@ type DisplayPropsType = {
     error: boolean
 }
 
-export const Display: React.FC<DisplayPropsType> = ({children, buttons, error}) => {
+export const Display: React.FC<DisplayPropsType> = (
+    {children, buttons, error}) => {
     const classDisplay = `${s.displayWrapper} ${error ? s.red : ''}`
     return (
         <div className={s.display}>

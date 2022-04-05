@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
-import './App.css';
+import s from './App.module.css';
 import {Display} from "./components/Display";
 import {Input} from "./components/Input";
 
 export function App() {
-    const [minValue, setMinValue] = useState(0)
-    const [maxValue, setMaxValue] = useState(5)
-    // const [error, setError] = useState('')
-    const error = minValue < 0 || maxValue < 0 || minValue >= maxValue
+    const [minValue, setMinValue] = useState(Number(localStorage.getItem('minValue')) || 0)
+    const [maxValue, setMaxValue] = useState(Number(localStorage.getItem('maxValue')) || 5)
 
-    let [counter, setCounter] = useState<number | null>(minValue)
+    let [counter, setCounter] = useState<number | null>(localStorage.getItem('minValue') ? minValue : null)
+    const error = minValue < 0 || maxValue < 0 || minValue >= maxValue
 
     const onIncrease = () => {
         counter !== null && counter < maxValue && setCounter(counter + 1)
@@ -20,6 +19,8 @@ export function App() {
     }
 
     const onSet = () => {
+        localStorage.setItem('minValue', JSON.stringify(minValue))
+        localStorage.setItem('maxValue', JSON.stringify(maxValue))
         onReset()
     }
 
@@ -30,15 +31,13 @@ export function App() {
         setMinValue(value)
     }
 
-
-    const increaseDisabled = counter === maxValue;
+    const increaseDisabled = counter === maxValue || error;
     const resetDisabled = counter === minValue;
 
-
     return (
-        <div className='App'>
+        <div className={s.wrapApp}>
             <Display
-                buttons={[{title: 'set', disabled: false, callBack: onSet}]}
+                buttons={[{title: 'set', disabled: error, callBack: onSet}]}
                 error={error}
             >
                 <Input value={maxValue} error={error} onChange={onChangeMaxValue}/>
@@ -50,9 +49,10 @@ export function App() {
                     {title: 'inc', disabled: increaseDisabled, callBack: onIncrease},
                     {title: 'reset', disabled: resetDisabled, callBack: onReset}
                 ]}
-                error={error}
+                error={error || counter === maxValue}
             >
-                {counter === null ? 'Set values then proceed' : counter}
+                {counter === null ? 'Set values then proceed' : error ? 'Incorrect values!' : counter}
+
             </Display>
         </div>
     );

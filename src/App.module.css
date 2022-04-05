@@ -1,0 +1,12 @@
+body {
+    background-color: rgb(40, 40, 40);
+}
+
+.wrapApp {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 10px 20px;
+}
+
+
