@@ -1,36 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import s from './App.module.css';
 import {Display} from "./components/Display";
 import {Input} from "./components/Input";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./redux/store";
+import {CounterType, incCounter, setCounter, setDisplaySet, setMaxValue, setMinValue} from "./redux/CounterReducer";
 
 export function App() {
-    const [minValue, setMinValue] = useState(Number(localStorage.getItem('minValue')) || 0)
-    const [maxValue, setMaxValue] = useState(Number(localStorage.getItem('maxValue')) || 5)
-    const [displaySet, setDisplaySet] = useState(false)
+    let {minValue, maxValue, displaySet, counter} =
+        useSelector<AppRootStateType, CounterType>(state => state.counter)
+    const dispatch = useDispatch()
 
-    let [counter, setCounter] = useState<number | null>(localStorage.getItem('minValue') ? minValue : null)
     const error = minValue < 0 || maxValue < 0 || minValue >= maxValue
 
     const onIncrease = () => {
-        counter !== null && counter < maxValue && setCounter(counter + 1)
+        counter !== null && counter < maxValue && dispatch(incCounter())
     }
 
     const onReset = () => {
-        setCounter(minValue)
+        dispatch(setCounter(minValue))
     }
 
     const onSet = () => {
-        setDisplaySet(!displaySet)
-        localStorage.setItem('minValue', JSON.stringify(minValue))
-        localStorage.setItem('maxValue', JSON.stringify(maxValue))
+        dispatch(setDisplaySet(!displaySet))
         onReset()
     }
 
     const onChangeMaxValue = (value: number) => {
-        setMaxValue(value)
+        dispatch(setMaxValue(value))
     }
+
     const onChangeMinValue = (value: number) => {
-        setMinValue(value)
+        dispatch(setMinValue(value))
     }
 
     const increaseDisabled = counter === maxValue || error;
